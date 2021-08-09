@@ -22,7 +22,7 @@ const QuestionCard: React.FC<Props> = ({
 			<p className="number">
 				Question: {questionNr} / {totalQuestions}
 			</p>
-			<p>{question}</p>
+			<p dangerouslySetInnerHTML={{ __html: question }} />
 			<div>
 				{answers.map((answer, index) => (
 					<div key={index}>
