@@ -9,7 +9,7 @@ import { QuestionState, Difficulty } from "./API";
 
 // image https://images.unsplash.com/photo-1619695724140-7ee0c416e1ff?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80
 
-type AnswerObject = {
+export type AnswerObject = {
 	question: string;
 	answer: string;
 	correct: boolean;
@@ -46,9 +46,29 @@ const App = () => {
 		}
 	};
 
-	const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {};
+	const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
+		if (!gameOver) {
+			const answer = e.currentTarget.value;
+			const correct = questions[number].correct_answer === answer;
+			if (correct) setScore((prev) => prev + 1);
+			const answerObject: AnswerObject = {
+				question: questions[number].question,
+				answer,
+				correct,
+				correctAnswer: questions[number].correct_answer,
+			};
+			setUserAnswers((prev) => [...prev, answerObject]);
+		}
+	};
 
-	const nextQuestion = () => {};
+	const nextQuestion = () => {
+		const nextQuestion = number + 1;
+		if (nextQuestion === TOTAL_QUESTIONS) {
+			setGameOver(true);
+		} else {
+			setNumber(nextQuestion);
+		}
+	};
 
 	return (
 		<div className="App">
@@ -58,7 +78,7 @@ const App = () => {
 					Start Trivia
 				</button>
 			) : null}
-			{!gameOver && <p className="score">Score: </p>}
+			{!gameOver && <p className="score">Score: {score}</p>}
 			{loading && <p>Loading Questions...</p>}
 			{!loading && !gameOver && (
 				<QuestionCard
